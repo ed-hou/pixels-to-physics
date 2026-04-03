@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+data/synthetic/*.npz
+data/video/
+.idea/
+*.egg-info/
+dist/
+build/
+wandb/
+.DS_Store
