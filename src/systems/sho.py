@@ -38,7 +38,7 @@ class SimpleHarmonicOscillator:
         p(t) = -q0*mw*sin*(wt) + p0*cos(wt)
         """
         w = np.sqrt(self.k/ self.m) #angular frequency
-        q = q0 * np.cos(w * t) + (p0/self.m * w)) * np.sin(w * t)
+        q = q0 * np.cos(w * t) + (p0/(self.m * w)) * np.sin(w * t)
         p = -q0 * self.m * w * np.sin(w *t) + p0 * np.cos(w*t)
         return q, p
 
@@ -49,8 +49,10 @@ class SimpleHarmonicOscillator:
         """integrate Hamiltonian eqns from q0, p0
         Uses DOP853 with strict tolerance as drift would tamper with the HNN comparison later"""
 
-        tEval = np.linspace(t_span[0], t_span[1], n_points)
-        sol = solveIVP(self.derivatives, t_span, [q0, p0], tEval=tEval, method= 'DOP853', rtol=1e-12, atol=1e-12)
+        t_eval = np.linspace(t_span[0], t_span[1], n_points)
+
+        sol = solve_ivp(self.derivatives, t_span, [q0, p0], t_eval=t_eval, method = 'DOP853', rtol=1e-12, atol=1e-12)
         if not sol.success:
                 raise RuntimeError(f"Integration failed: {sol.message}")
+
         return sol.t, sol.y[0], sol.y[1] #t, q, p
