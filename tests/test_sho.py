@@ -36,7 +36,7 @@ def testPeriod():
     if len(crossings) == 0:
         raise RuntimeError("No crossings found")
 
-    T_numerical = crossings[1]
+    T_numerical = crossings[1] - crossings[0]
     error = abs(T_numerical - T_Analytical) / T_Analytical
 
     print(f"Analytical period: {T_Analytical:.6f}")
