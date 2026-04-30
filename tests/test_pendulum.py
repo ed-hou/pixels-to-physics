@@ -29,7 +29,7 @@ def testsmallAnglePeriod():
 
 
     q0 = 0.1
-    t, q, p = pend.generateTrajectory(q0, 0.0, t_span=(0,20), n_points = 50000)
+    t, q, p = pend.generateTrajectory(q0, 0.0, t_span=(0,20), n_points = 200000)
 
     crossings = []
     for i in range(1, len(q)):
@@ -44,7 +44,7 @@ def testsmallAnglePeriod():
     print(f"Small=angle period (analytical): {T_approx: .6f}")
     print(f"Small-angle period (numerical): {T_numerical: .6f}")
     print(f"Relative error: {error: .2e}")
-    assert error < 1e-4, f"Period error too large: {error}"
+    assert error < 1e-5, f"Period error too large: {error}"
     print("PASSED: small-angle period matches")
 
 def testreducestoSho():
