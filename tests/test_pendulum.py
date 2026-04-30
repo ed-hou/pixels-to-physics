@@ -28,7 +28,7 @@ def testsmallAnglePeriod():
     T_approx = pend.small_angle_period()
 
 
-    q0 = 0.1
+    q0 = 0.01
     t, q, p = pend.generateTrajectory(q0, 0.0, t_span=(0,20), n_points = 200000)
 
     crossings = []
@@ -39,6 +39,8 @@ def testsmallAnglePeriod():
             crossings.append(t_cross)
 
     T_numerical = crossings[1] - crossings[0]
+    print(f"Number of crossings found: {len(crossings)}")
+    print(f"First few crossings: {crossings[:5]}")
     error = abs(T_numerical - T_approx) / T_approx
 
     print(f"Small=angle period (analytical): {T_approx: .6f}")
