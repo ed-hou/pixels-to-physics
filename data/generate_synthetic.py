@@ -48,6 +48,32 @@ def add_noise (q,p, sigma):
 
 def generate_sho_dataset(seed=26):
     """
-    Add gaussian noise scaled by signal amplitude.
-
+    I sample q0 from 0.3 to 1.5rad to demonstrate nonlinearity effects. stay in libration regime
     """
+
+    rnjesus = np.random.RandomState(seed)
+    pend = SimplePendulum(m=1.0, l=1.0, g=9.81)
+    q0_samples = rnjesus.uniform(0.3, 1.5, N_TRAJECTORIES)
+
+    all_t = np.zeros((N_TRAJECTORIES, N_POINTS_PER_TRAJ))
+    all_q = np.zeros((N_TRAJECTORIES, N_POINTS_PER_TRAJ))
+    all_p = np.zeros((N_TRAJECTORIES, N_POINTS_PER_TRAJ))
+    all_H = np.zeros((N_TRAJECTORIES, N_POINTS_PER_TRAJ))
+
+    for i, q0 in enumerate(q0_samples):
+        t,q,p = pend.generateTrajectory(q0=q0, p0=0.0, t_span=(0, T_MAX), n_points=N_POINTS_PER_TRAJ)
+        all_t[i] = t
+        all_q[i] = q
+        all_p[i] = p
+        all_H[i] = pend.hamiltonian(q,p)
+
+    return {
+        't': all_t,
+        'q': all_q,
+        'p': all_p,
+        'H': all_H,
+        'initial_conditions': np.column_stack([q0_samples, np.zeros_like(q0_samples)]),
+        'system_params': {'m:' pend.m, 'l:' pend.l, 'g:' pend.g},
+        'system_name': 'SimplePendulum',
+
+    }
