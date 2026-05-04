@@ -44,7 +44,7 @@ class SimpleHarmonicOscillator:
 
     def period(self):
         """analytical period T = 2*pi*sqrt(m/k)."""
-        return 2*np.pi*(self.m / self.k)
+        return 2*np.pi*np.sqrt(self.m / self.k)
     def generateTrajectory(self, q0, p0, t_span, n_points = 1000):
         """integrate Hamiltonian eqns from q0, p0
         Uses DOP853 with strict tolerance as drift would tamper with the HNN comparison later"""
