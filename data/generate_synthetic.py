@@ -188,7 +188,7 @@ def main():
     }
     metadata_path = os.path.join(OUTPUT_DIR, 'dataset_info.json')
     with open(os.path.join(OUTPUT_DIR, 'dataset_info.json'), 'w') as f:
-        json.dump(metadata_path, f, indent=2)
+        json.dump(metadata, f, indent=2)
 
     print(f"\nDataset metadata written to {metadata_path}")
     print(f"All data saved to {OUTPUT_DIR}")
