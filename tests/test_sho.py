@@ -1,3 +1,5 @@
+from termios import TIOCM_CAR
+
 import numpy as np
 import sys
 import os
@@ -43,7 +45,15 @@ def testPeriod():
     print(f"Numerical period: {T_numerical:.6f}")
     print(f"Realtive error: {error:.2e}")
     assert error < 1e-6, f"Period error too large: {error}"
-    print("PASSED: period matches analytical")
+    #regression test to test for the unaccounted error
+    sho2 = SimpleHarmonicOscillator(m=2.0, k = 1.0)
+    T_expected = sho2.period()
+
+    formula_error = abs(T_expected - T_Analytical) / T_Analytical
+    print(f"Period with m=2, k=1, I expected {T_expected:.6f}, but got {T_Analytical:.6f}")
+    assert formula_error < 1e-12, f"period() formula bug: {T_Analytical} vs T_expected: {T_expected}"
+    print("PASSED where nonunit paramater works ok")
+    print("PASSED, period matches analytical")
 
 def test_against_analytical():
     """Compare numerical solution against exact closed-form soln."""
