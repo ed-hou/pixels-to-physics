@@ -47,11 +47,12 @@ def testPeriod():
     assert error < 1e-6, f"Period error too large: {error}"
     #regression test to test for the unaccounted error
     sho2 = SimpleHarmonicOscillator(m=2.0, k = 1.0)
+    T_actual = 2*np.pi*np.sqrt(2.0)
     T_expected = sho2.period()
 
-    formula_error = abs(T_Analytical - T_expected) / T_expected
-    print(f"Period with m=2, k=1, I expected {T_expected:.6f}, but got {T_Analytical:.6f}")
-    assert formula_error < 1e-12, f"period() formula bug: {T_Analytical} vs  {T_expected}"
+    formula_error = abs(T_actual - T_expected) / T_expected
+    print(f"Period with m=2, k=1, I expected {T_expected:.6f}, but got {T_actual:.6f}")
+    assert formula_error < 1e-12, f"period() formula bug: {T_actual} vs  {T_expected}"
     print("PASSED where nonunit paramater works ok")
     print("PASSED, period matches analytical")
 
