@@ -26,6 +26,12 @@ N_POINTS_PER_TRAJ = 1000
 T_MAX = 10.0
 NOISE_LEVELS = [0.0, 0.01, 0.05, 0.1]
 TRAIN_FRAC, VAL_FRAC = 0.7, 0.15
+#SEEDS
+SHO_SEED = 69
+PENDULUM_SEED = 69
+SHO_SPLIT_SEED = 1911
+PENDULUM_SPLIT_SEED = 250
+NOISE_SEED_BASE = 26
 
 
 # directory where the .npz files will be saved
@@ -49,7 +55,7 @@ def add_noise (q,p, sigma):
 
     return q_noisy, p_noisy
 
-def generate_sho_dataset(seed=69):
+def generate_sho_dataset(seed=SHO_SEED):
     """
     sho trajectories at varying initial amplitudes
     sampling from 0.5 to 2.5
@@ -76,7 +82,7 @@ def generate_sho_dataset(seed=69):
     all_H = np.zeros((N_TRAJECTORIES, N_POINTS_PER_TRAJ))
 
     for i, (q0, p0) in enumerate(initial_cond):
-        t,q,p = sho.generateTrajectory(q0=q0, p0=p0, t_span = (0, T_MAX), n_points = N_POINTS_PER_TRAJ)
+        t,q,p = sho.generate_trajectory(q0=q0, p0=p0, t_span = (0, T_MAX), n_points = N_POINTS_PER_TRAJ)
         all_t[i] = t
         all_q[i] = q
         all_p[i] = p
@@ -85,7 +91,7 @@ def generate_sho_dataset(seed=69):
     return { 't': all_t, 'q': all_q, 'p': all_p, 'H': all_H, 'initial_cond': initial_cond, 'system_params': {'m': sho.m, 'k': sho.k}, 'system_name': 'SimpleHarmonicOscillator',}
 
 
-def generate_pendulum_dataset(seed=67):
+def generate_pendulum_dataset(seed=PENDULUM_SEED):
     """
     I sample q0 from 0.3 to 1.5rad to demonstrate nonlinearity effects. stay in libration regime
     """
@@ -109,7 +115,7 @@ def generate_pendulum_dataset(seed=67):
     all_H = np.zeros((N_TRAJECTORIES, N_POINTS_PER_TRAJ))
 
     for i, (q0, p0) in enumerate(initial_cond):
-        t,q,p = pend.generateTrajectory(q0=q0, p0=p0, t_span=(0, T_MAX), n_points=N_POINTS_PER_TRAJ)
+        t,q,p = pend.generate_trajectory(q0=q0, p0=p0, t_span=(0, T_MAX), n_points=N_POINTS_PER_TRAJ)
         all_t[i] = t
         all_q[i] = q
         all_p[i] = p
@@ -135,7 +141,7 @@ def make_split_helper(n_trajectories, seed = 67):
              'val': indices[n_train:n_train+n_val],
              'test': indices[n_train+n_val:]}
 
-def save_dataset(data, system_name, noise_level, splits, seed=26):
+def save_dataset(data, system_name, noise_level, splits, seed=NOISE_SEED_BASE):
         """
         Save dataset with noise and traj split assignments
 
@@ -165,13 +171,13 @@ def save_dataset(data, system_name, noise_level, splits, seed=26):
 def main():
     print(f"Generating SHO dataset({N_TRAJECTORIES} trajectories)")
     sho_data = generate_sho_dataset()
-    sho_splits = make_split_helper(N_TRAJECTORIES, seed= 1911)
+    sho_splits = make_split_helper(N_TRAJECTORIES, seed=SHO_SPLIT_SEED)
     for noise in NOISE_LEVELS:
         save_dataset(sho_data, 'sho', noise, sho_splits)
 
     print(f"\nGenerating pendulum dataset ({N_TRAJECTORIES} trajectories, {N_POINTS_PER_TRAJ} points each)")
     pend_data = generate_pendulum_dataset()
-    pend_splits = make_split_helper(N_TRAJECTORIES, seed = 250)
+    pend_splits = make_split_helper(N_TRAJECTORIES, seed = PENDULUM_SPLIT_SEED)
     for noise in NOISE_LEVELS:
         save_dataset(pend_data, 'pendulum', noise, pend_splits)
 
@@ -184,10 +190,11 @@ def main():
         'noise levels': NOISE_LEVELS,
         'split_fractions': {'train': TRAIN_FRAC, 'val': VAL_FRAC, 'test': round(1- TRAIN_FRAC-VAL_FRAC, 2)},
         'sampling_strategy': '2D phase space sampling with energy band rejection', 'sho_energy_band': [0.1, 3.5],
-        'pendulum_energy_band': [0.5, 9.0], 'integrator': 'DOP853 with rtol=atol=1e-12', 'seeds': {'sho': 454, 'pendulum': 891, 'sho_split': 13, 'pendulum_split': 2},
+        'pendulum_energy_band': [0.5, 9.0], 'integrator': 'DOP853 with rtol=atol=1e-12', 'seeds': {'sho': SHO_SEED, 'pendulum': PENDULUM_SEED, 'sho_split': SHO_SPLIT_SEED, 'pendulum_split': PENDULUM_SPLIT_SEED, 'noise_base': NOISE_SEED_BASE},
+
     }
     metadata_path = os.path.join(OUTPUT_DIR, 'dataset_info.json')
-    with open(os.path.join(OUTPUT_DIR, 'dataset_info.json'), 'w') as f:
+    with open(metadata_path, 'w') as f:
         json.dump(metadata, f, indent=2)
 
     print(f"\nDataset metadata written to {metadata_path}")
