@@ -30,3 +30,22 @@ We have a structure as a M shape, when we fit out the q^2, and what's left domin
 
 ###gonna do neural ode
 
+
+## May 6 bug in metrics module and tests
+
+After writing test_parametric.py, I hit two bugs that share a single root cause where synthetic data with
+a perfect candidate produces a sse at 0 in float and code that assumed sse>0 crashes
+1) The first bug rejected when sse=0, triggered when fit_unknown evaluated AIC for the the pendulum on pendulum data. So fixed rejecting only neg sse and return -inf when 0. I note lim aic as sse goes to 0+ is -inf. 
+2) zerodivision error in test_wrongformfailed where sse_wrong/ssecorrect erroered when sse_correct=0 so I assigned float(inf) when the correct fit sse is at around machine precision.
+3) Synth data would trigger both bugs
+
+###tests suites
+1) test_sho.py energy conservation, period, and the match against analytical solution
+2) test_pendulum.py energy conservation, small-angle period, SHO reduction limit
+3) test_parametric.py SHO recovery, pend recovery, fit_unknown ranker, and wrong form failure test
+
+###retroactive thoughts
+Easy: the curve_fit on well known probllems where the pendulum coeff recovery to machine precision was observed.
+Harder: handling test edge cases.
+I should have wrote test_parametric.py before the wrong form experiment. I had cascading 0 related issues. 
+
