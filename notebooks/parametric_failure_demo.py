@@ -33,7 +33,7 @@ fitter_wrong = ParametricHamiltonianFit()
 wrong=fitter_wrong.fit_sho(q,p, H_true)
 
 print(f"Correct form (pendulum): {correct['formula']}")
-print(f" SSE = {np.sum(fitter_correct.residuals**2):.4d}")
+print(f" SSE = {np.sum(fitter_correct.residuals**2):.4e}")
 print(f" max |residual| = {np.max(np.abs(fitter_correct.residuals)):.4e}")
 print()
 print(f"Wrong form (SHO):    {wrong['formula']}")
@@ -49,6 +49,21 @@ Draw figure with residuals vs q for both fits in sidebyside view
 """
 
 fig, axes = plt.subplots(1,2, figsize=(12,4.5), sharey=False)
-axes[0].scatter(q, fitter_correct.residuals, s=3, alpha=0.5, color='steelblue')
-axes[0].axhline()
+axes[0].scatter(q, fitter_correct.residuals, s=3, alpha=0.5, color='darkorange')
+axes[0].axhline(0, color='k', lw=0.5)
+axes[0].set_xlabel('q (rad)')
+axes[0].set_ylabel('H_true - H_fit')
+axes[0].set_title(f"Correct form where H= a*p^2 + b*(1-cosq)\nSSE={np.sum(fitter_correct.residuals**2):.2e}")
+#wrong below
+axes[1].scatter(q, fitter_wrong.residuals, s=3, alpha=0.5, color='mediumpurple')
+axes[1].axhline(0, color='k', lw=0.5)
+axes[1].set_xlabel('q (rad)')
+axes[1].set_ylabel('H_true - H_fit')
+axes[1].set_title(f"Wrong form where H=a*(p^2) + b*(q^2)\nSSE= {np.sum(fitter_wrong.residuals**2):.2e}")
+plt.tight_layout()
+out_path= os.path.join(os.path.dirname(__file__), "..", 'results', 'figures', 'parametric_wrong_form_residuals.png')
+plt.savefig(out_path, dpi=150, bbox_inches='tight')
+print(f"\nfigure saved to {out_path}")
+plt.show()
+
 
