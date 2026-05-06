@@ -48,8 +48,10 @@ def aic(sse, n_data, n_params):
     n_params is the number of free params in teh model
     """
 
-    if sse <=0:
+    if sse <0:
         raise ValueError(f"sse must be positive, got {sse}")
+    if sse ==0:
+        return float('-inf')
     if n_data <=0:
         raise ValueError(f"n_data must be positive, got {n_data}")
     return float(n_data*np.log(sse/n_data)+2*n_params)
@@ -59,8 +61,11 @@ def bic(sse, n_data, n_params):
     heavily.
     """
 
-    if sse <=0:
+    if sse <0:
         raise ValueError(f"sse must be positive, got {sse}")
+    if sse ==0:
+    #perfect fit
+        return float('-inf')
     if n_data <=0:
         raise ValueError(f"n_data must be positive, got {n_data}")
     return float(n_data*np.log(sse/n_data)+n_params*np.log(n_data))
