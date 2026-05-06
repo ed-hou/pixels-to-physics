@@ -1,3 +1,5 @@
+
+
 import numpy as np
 from scipy.optimize import curve_fit
 
@@ -93,6 +95,7 @@ if __name__ == '__main__':
 
         # main tests
         from src.systems.sho import SimpleHarmonicOscillator
+        from src.systems.pendulum import SimplePendulum
 
         sho = SimpleHarmonicOscillator(m = 1.0, k=1.0)
         t, q, p = sho.generate_trajectory(q0=1.0, p0=0.5, t_span=(0,10), n_points=1000)
@@ -104,4 +107,17 @@ if __name__ == '__main__':
         print(f"   expected a=.5, got a={result['a']:.6f}")
         print(f"   expected b=.5, got b={result['b']:.6f}")
         print(f"   max residual, {np.max(np.abs(fitter_bot.residuals)): .2e}")
+
+        pend = SimplePendulum(m=1.0, l=1.0, g=9.81)
+        t, q, p = pend.generate_trajectory(q0=1.0, p0=0.0, t_span=(0,10), n_points=1000)
+        H_true = pend.hamiltonian(q,p)
+
+        fitter_pend = ParametricHamiltonianFit()
+        result = fitter_pend.fit_pendulum(q,p, H_true)
+        print(f"\nPendulum fit: {result['formula']}")
+        print(f" expected a=.5, got a={result['a']:.6f}")
+        print(f"   expected b=9.81, got b={result['b']:.6f}")
+        print(f" max residula: {np.max(np.abs(fitter_pend.residuals)): .2e}")
+
+
 
