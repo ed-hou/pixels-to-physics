@@ -49,3 +49,8 @@ Easy: the curve_fit on well known probllems where the pendulum coeff recovery to
 Harder: handling test edge cases.
 I should have wrote test_parametric.py before the wrong form experiment. I had cascading 0 related issues. 
 
+
+## May 7
+
+Running into the issue TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead., 
+Can't seem to figure out so running on CPU instead. Adding torch.set_dfault_dtype(torch.float32) does not seem to work at all after importing torch. will figure out later.

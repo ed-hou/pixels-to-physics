@@ -8,10 +8,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from src.systems.sho import SimpleHarmonicOscillator
 
-def testEnergyconservation():
+def test_energy_conservation():
     """H should be constant along the trajectory to around 1e-10."""
     sho = SimpleHarmonicOscillator(m=1.0, k = 1.0)
-    t, q, p = sho.generateTrajectory(q0 = 1.0, p0 = 0.0, t_span=(0,20), n_points=20000)
+    t, q, p = sho.generate_trajectory(q0 = 1.0, p0 = 0.0, t_span=(0, 20), n_points=20000)
 
     H = sho.hamiltonian(q, p)
     H_drift = np.max(np.abs(H-H[0]) / np.abs(H[0]))
@@ -20,13 +20,13 @@ def testEnergyconservation():
     assert H_drift <1e-10, f"Energy drift too large: {H_drift}"
     print("PASSED: energy conversation")
 
-def testPeriod():
+def test_period():
     """Trajectory should complete one cycle in T = 2*pi*sprt(m/k). We find the first time q returns to its initial value with the same sign of p"""
     sho = SimpleHarmonicOscillator(m=1.0, k = 1.0)
     T_Analytical = sho.period()
 
     #initiate at q0 = 1, p0=0
-    t,q, p = sho.generateTrajectory(q0 = 1.0, p0 = 0.0, t_span=(0, 20), n_points=10000)
+    t,q, p = sho.generate_trajectory(q0 = 1.0, p0 = 0.0, t_span=(0, 20), n_points=10000)
     #make sure there's 0 crossings of q going positive
     crossings = []
 
@@ -61,8 +61,8 @@ def test_against_analytical():
     sho = SimpleHarmonicOscillator(m=1.0, k = 1.0)
     q0, p0 = 1.0, 0.5
 
-    t, q_num, p_num = sho.generateTrajectory(q0 = q0, p0 = p0, t_span=(0, 10), n_points=1000)
-    q_exact, p_exact = sho.analyticalSoln(q0, p0, t)
+    t, q_num, p_num = sho.generate_trajectory(q0 = q0, p0 = p0, t_span=(0, 10), n_points=1000)
+    q_exact, p_exact = sho.analytical_soln(q0, p0, t)
     q_error = np.max(np.abs(q_num - q_exact))
     p_error = np.max(np.abs(p_num - p_exact))
 
@@ -73,9 +73,9 @@ def test_against_analytical():
     print ("PASSED: MATCHES ANALYTICAL SOLUTION")
 
 if __name__ == "__main__":
-     testEnergyconservation()
+     test_energy_conservation()
      print()
-     testPeriod()
+     test_period()
      print()
      test_against_analytical()
      print()

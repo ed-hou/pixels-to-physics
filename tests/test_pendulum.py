@@ -13,7 +13,7 @@ def test_energy_conservation():
     #test at a large angle
     q0 = 1.0 #57 deg
     p0 = 0.0
-    t, q, p = pend.generateTrajectory(q0, p0, t_span = (0,20), n_points = 5000)
+    t, q, p = pend.generate_trajectory(q0, p0, t_span = (0, 20), n_points = 5000)
 
     H = pend.hamiltonian(q, p)
     H_drift = np.max(np.abs(H-H[0])) / np.abs(H[0])
@@ -29,7 +29,7 @@ def testsmallAnglePeriod():
 
 
     q0 = 0.01
-    t, q, p = pend.generateTrajectory(q0, 0.0, t_span=(0,20), n_points = 200000)
+    t, q, p = pend.generate_trajectory(q0, 0.0, t_span=(0, 20), n_points = 200000)
 
     crossings = []
     for i in range(1, len(q)):
@@ -60,8 +60,8 @@ def testreducestoSho():
     p0 = 0.0
     t_span = (0, 10)
 
-    t, q_pend, p_pend = pend.generateTrajectory(q0, p0, t_span, n_points = 2000)
-    t, q_sho, p_sho = sho.generateTrajectory(q0, p0, t_span= t_span, n_points = 2000)
+    t, q_pend, p_pend = pend.generate_trajectory(q0, p0, t_span, n_points = 2000)
+    t, q_sho, p_sho = sho.generate_trajectory(q0, p0, t_span= t_span, n_points = 2000)
 
     q_diff = np.max(np.abs(q_pend - q_sho))
     print(f"Max diff between pendulum and SHO at small angle: {q_diff: .2e}")

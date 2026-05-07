@@ -32,7 +32,7 @@ class SimplePendulum:
 
         return 2*np.pi*np.sqrt(self.l/self.g)
 
-    def generateTrajectory(self, q0, p0, t_span, n_points =1000):
+    def generate_trajectory(self, q0, p0, t_span, n_points =1000):
         """we use dop853 as well here"""
 
         t_eval = np.linspace(t_span[0], t_span[1], n_points)

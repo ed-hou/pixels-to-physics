@@ -16,6 +16,7 @@ def _H_pendulum(qp, a, b):
 
 def _H_quartic(qp, a, b, c):
     #demonstrate aic penalty
+    q,p = qp
     return a*p**2+b*q**2+c*q**4
 
 class ParametricHamiltonianFit:
