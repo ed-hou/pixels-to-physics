@@ -25,11 +25,11 @@ class HamiltonianFunc(nn.Module):
 
     def set_normalization(self,mean, std):
         self.state_mean.copy_(torch.as_tensor(mean, dtype=self.state_mean.dtype))
-        self.state_std.cpy_(torch.as_tensor(std, dtype=self.state_std.dtype))
+        self.state_std.copy_(torch.as_tensor(std, dtype=self.state_std.dtype))
 
     def forward(self, t, state):
         # requires_grad on the unnormalized coord. autograd carries the 1/sigma chain rule through normalization
-        state= state.requires_grad(True)
+        state= state.requires_grad_(True)
         state_norm = (state-self.state_mean)/ self.state_std
         H=self.net(state_norm).sum()
         dH=torch.autograd.grad(H, state, create_graph=True)[0]
@@ -37,7 +37,7 @@ class HamiltonianFunc(nn.Module):
         dp_dt = -dH[..., 0]
         return torch.stack([dq_dt, dp_dt], dim=-1)
 
-class HNN(nn.module):
+class HNN(nn.Module):
      #hamiltonianfunc helper.
     def __init__(self, state_dim=2, hidden=200, solver='dopri5'):
         super().__init__()
