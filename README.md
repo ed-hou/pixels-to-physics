@@ -22,3 +22,11 @@ TODO:
 4) comparison framework and then video
 
 #I am exploring the qualities of the KAN 
+
+
+
+##Done 
+1) Synth data for SHO and simple pendulum with adjustable train/val/test splits
+2) paramatric hamiltonian fitter via curve fit and wrong form failure demo
+3) test suite 
+4) ogneuralode on sho and pendulum wiht 5.65 and 14.49 percent drift over 50seconds respectivley
