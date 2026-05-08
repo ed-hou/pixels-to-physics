@@ -54,3 +54,14 @@ I should have wrote test_parametric.py before the wrong form experiment. I had c
 
 Running into the issue TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead., 
 Can't seem to figure out so running on CPU instead. Adding torch.set_dfault_dtype(torch.float32) does not seem to work at all after importing torch. will figure out later.
+
+## OG Neural ODE on Simple Harmonic Oscillator
+
+neural_ode.py is a 2, 64,64,2 multiplayer perceptron(Mlp) with tanh. RELU would fight the ode solver and produce nonsmooth phase portraits.
+HamiltonianFunc will use the same architecture.
+
+Training: adam at lr=1e-3, 800 epochs, with batch of 16 traj and window lengths of 64 timesteps. Loss curve dropped from 1e-1 to 1e-5. 
+I observed on the 50s rollout that the short term tracking is ok with around 5.65 percent rel drift over the period. Given enough time the trajectory would drift off the constant H surface, so 
+the og ode would not renderthe concept of energy conservation.
+
+I expect pendulum data to be worse on this system. 
