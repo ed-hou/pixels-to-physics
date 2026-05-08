@@ -65,3 +65,18 @@ I observed on the 50s rollout that the short term tracking is ok with around 5.6
 the og ode would not renderthe concept of energy conservation.
 
 I expect pendulum data to be worse on this system. 
+
+##ogneural ode on pendulum
+
+I duplicated the same train node on train node pendulum and in paralleldid the same for ogneural diago to ogneuralpendulum. 
+Used the same architecture init window, batch size, same 200 epochs and loss functions
+Results: final epoch loss was 1.40 -7. The loss curve dropped to about 3.4e-2 at epoch 0 and by epoch 30 was sub 1e-6  and then plateud around 1ee-7 with normal sgd noise. 
+Observed no instablility. 
+For the rollout, my initial cond was q0=1.2, p0=0.0 where h0=6.255. Picked release at 69deg to put the rollout in nonlinear regime where we are out of small angle approx regime. 
+
+Looking at the energy plot, H(t) drifts monotonically in a noisy fashion. Loiuville's theorem forbids a nonzero divergence in the learned vector field
+but the mlp possesses no such constraints as it just fits the training data only. It has none of that "intuition". HNN will possess that "intuition"
+
+50s panel shows the trajectory thickening inward into a slow spiral where a constant H curve becomes dissipative under the trained dynamics. Right edge q intercept crept from 1.2 to about 1.05
+
+vs. SHO. Shows a larger 2.6x gap. HNN should look more dramatic on pendulum than on simple harmonic oscillator.
