@@ -80,3 +80,23 @@ but the mlp possesses no such constraints as it just fits the training data only
 50s panel shows the trajectory thickening inward into a slow spiral where a constant H curve becomes dissipative under the trained dynamics. Right edge q intercept crept from 1.2 to about 1.05
 
 vs. SHO. Shows a larger 2.6x gap. HNN should look more dramatic on pendulum than on simple harmonic oscillator.
+
+
+### May 8 
+
+I implemented the HNN, scalar H_theta(q,p) net, 2,200,200,1 with tanh and autograd through in order to dervie dq/dt= dH/dp,
+dp/dt=-dH/dq. 
+
+Training: implemented 400 epochs. The curriculum is as follows: WINDOW=2 for epochs 0-50, window=5 from 5-150 and window=10 for 150-400.
+warmup over first 500 optim steps then constant
+
+epoch 0 loss was 2.3e-4. Each window transition created loss spike from 9e-9 to 9.9e-6 and recovered within 10 epochs. On w=5 to w=10, the loss spike wnet from 3.5e-8
+to 9.8 e-6 and didn't fully recover after that. W=10 phase plateued around 1e-7 to 4e-7 and final epoch 1.5e-7 which matches ogneuralODE final sho loss.
+
+considered cosine annealing to address window=10 plateau but after diag determined it was unncessary
+
+Diagnostic: where q0=1.0, p0=.5, h=.625, saw .1163% energy drift whereas ogneural ode had 5.6539 percent.
+This means there was a 49x improvement for energy drift from the HNN in relation to the ogneuralode
+
+H(t) plot for ogneuralode traced a stair step decline from .625 to .590 whereas hnn oscillated symetrically around .625 with no deterministic trend. 
+

@@ -119,7 +119,7 @@ def train():
             lr_current= optim.param_groups[0]['lr']
             print(f"epoch {epoch:3d}, win {mostrecent_window}, lr {lr_current:.2e}, loss {epoch_loss/nbatches:.6e}")
 
-    out_dir=os.path.join(os.path.dirname(__file__), '..', '..', 'recents', 'checkpoints')
+    out_dir=os.path.join(os.path.dirname(__file__), '..', '..', 'results', 'checkpoints')
     os.makedirs(out_dir, exist_ok=True)
     out_path=os.path.join(out_dir, 'hamiltonianSHO.pt')
     torch.save(model.state_dict(), out_path)
