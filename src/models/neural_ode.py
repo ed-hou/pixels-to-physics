@@ -31,6 +31,6 @@ class OGNeuralODE(nn.Module):
         self.solver = solver
 
     def integrate(self, state0, t_eval):
-        return odeint(self.func, state0, t_eval, method=self.solver, rtol=1e-5, atol=1e-7)
+        return odeint(self.func, state0, t_eval, method=self.solver, rtol=1e-5, atol=1e-7, options={'dtype': torch.float32})
 
 

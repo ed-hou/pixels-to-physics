@@ -47,4 +47,4 @@ class HNN(nn.Module):
     def integrate(self, state0, t_eval):
         #need enable_grad because the forward pass derives ds/dt via autgrad through H.
         with torch.enable_grad():
-            return odeint(self.func, state0, t_eval, method=self.solver, rtol=1e-5, atol=1e-7)
+            return odeint(self.func, state0, t_eval, method=self.solver, rtol=1e-5, atol=1e-7, options={'dtype': torch.float32})
