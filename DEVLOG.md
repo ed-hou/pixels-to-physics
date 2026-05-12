@@ -107,3 +107,26 @@ level than sho did.
 
 NOticed about a 15.6x improvement on energy drift vs ogneuralode. HNN on pendulum and sho shows decisive imporments. 
 
+
+Leapfrog integrator integrator comparison
+
+Implemented leapfrog symplectic integrator in src/models/symplectic_integrator.py. Ran comparison diagnostics for both sho and pendulum for og
+neuralode vs hnndopri5 and hnn leapfrog on 50second rollouts.
+
+I oopsied a bug where on the kickstep2 I evaluated dh/dq to (q, p_half) instead of (q_new, p_half). This typo generated a 300% drift and
+I thought there was an architectural issue. fixed the typo and the error was quickly fixed.
+
+Results
+
+SHO on ogneuralode 5.65 percent
+SHO on HNN dopri5 .12 percent
+SHo on HNN leaprfrog .1012 percent
+
+Pendulum on ogneuralode 14.49percent
+on HNNdopri5 .93%
+on HNN leapfrog .9133 percent
+Improvement on leapfrog is marginal. Avg about 16 percent improvement and 2% on pendulum.
+
+SHO is closer to being an exacctly seperable ode so leapfrog's symplectic assumption fits H(theta) better, relatively. 
+
+

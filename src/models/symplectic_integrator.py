@@ -17,27 +17,29 @@ def leap_step(ham_func, q, p, dt):
     w/ each kick recomputing dH/dq @current state
     """
     n=q.shape[-1]
+    q=q.detach()
+    p=p.detach()
 
     #halfkick1
     current_state = torch.cat([q,p], dim=-1). requires_grad_(True)
     H= ham_func.net((current_state- ham_func.state_mean)/ ham_func.state_std).sum()
     dH=torch.autograd.grad(H,current_state,create_graph=False)[0]
-    dHdq = dH[..., :n]
-    p_half = p-.5*dt*dHdq
+    dHdp = dH[..., :n]
+    p_half = (p-.5*dt*dHdp).detach()
 
     #full drift
     current_state = torch.cat([q,p_half], dim=-1). requires_grad_(True)
     H=ham_func.net((current_state- ham_func.state_mean) / ham_func.state_std).sum()
     dH=torch.autograd.grad(H, current_state, create_graph=False)[0]
     dHdq_half = dH[..., n:]
-    q_new = q + dt*dHdq_half
+    q_new = (q + dt*dHdq_half).detach()
 
     #halfkick2
-    current_state=torch.cat([q,p_half], dim=-1). requires_grad_(True)
+    current_state=torch.cat([q_new,p_half], dim=-1). requires_grad_(True)
     H= ham_func.net((current_state- ham_func.state_mean) / ham_func.state_std).sum()
     dH=torch.autograd.grad(H, current_state, create_graph=False)[0]
     dHdq_new = dH[..., :n]
-    p_new = p_half-.5*dt*dHdq_new
+    p_new = (p_half-.5*dt*dHdq_new).detach()
 
     return q_new, p_new
 
