@@ -100,3 +100,10 @@ This means there was a 49x improvement for energy drift from the HNN in relation
 
 H(t) plot for ogneuralode traced a stair step decline from .625 to .590 whereas hnn oscillated symetrically around .625 with no deterministic trend. 
 
+
+For pendulum on hnn, I duplicated the same process from sho. On the training I run, I ran 400 epochs.
+Noticed epoch 0 loss was higher than that of sho's at 2.3e-4. noticed more loss around w=2 to w=5 at epoch 50. At around epoch150, the noise level plateaued at a higher 
+level than sho did. 
+
+NOticed about a 15.6x improvement on energy drift vs ogneuralode. HNN on pendulum and sho shows decisive imporments. 
+
