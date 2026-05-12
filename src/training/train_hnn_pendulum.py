@@ -24,8 +24,7 @@ print(f"using device: {DEVICE}")
 
 if torch.backends.mps.is_available():
     DEVICE = torch.device('mps')
-elif torch.cuda.is_available():
-    DEVICE = torch.device('cuda')
+
 else:
     DEVICE = torch.device('cpu')
 print(f"using device: {DEVICE}")

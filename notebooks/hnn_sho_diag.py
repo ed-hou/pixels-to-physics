@@ -16,7 +16,12 @@ CHECKPOINT_OGNODE = os.path.join(os.path.dirname(__file__), '..', 'results', 'ch
 
 TLONG=50.0
 NPOINTS_LONG=5000
-DEVICE = torch.device('cpu')
+if torch.backends.mps.is_available():
+    DEVICE = torch.device('mps')
+else:
+    DEVICE = torch.device('cpu')
+print(f"using device: {DEVICE}")
+torch.set_default_dtype(torch.float32)
 torch.set_default_dtype(torch.float32)
 
 def load_hnn():
