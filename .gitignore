@@ -9,3 +9,4 @@ dist/
 build/
 wandb/
 .DS_Store
+model/
