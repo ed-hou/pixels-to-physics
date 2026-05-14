@@ -26,6 +26,7 @@ def load_sho_data():
 
 def main():
     sho=SimpleHarmonicOscillator(m=1.0, k=1.0)
+    sho=SimpleHarmonicOscillator(m=1.0, k=1.0)
     hkan=HamiltonianKAN(sho) #dataset for refit after pruning
     q,p=load_sho_data()
     dataset=hkan.build_dataset(q,p)
@@ -34,7 +35,7 @@ def main():
     hkan_loaded.model.load_state_dict(torch.load(checkpoint_path))
     model = hkan_loaded.model
     print(f"loaded kan from {checkpoint_path}")
-
+    model.get_act(dataset['train_input'])
     #plotting the preprune diagram so we can visualize what specifically gets dropped
     plt.figure(figsize=(8, 8))
     model.plot()
