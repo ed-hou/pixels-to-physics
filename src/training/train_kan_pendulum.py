@@ -14,9 +14,9 @@ from src.systems.pendulum import SimplePendulum
 from src.models.kan_wrapper import HamiltonianKAN
 
 data_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'synthetic', 'pendulum_noise000.npz')
-steps=50
-lamb=.001
-lamb_entropy=2.0
+steps=100
+lamb=.01
+lamb_entropy=10.0
 DEVICE = torch.device('cpu')
 
 
