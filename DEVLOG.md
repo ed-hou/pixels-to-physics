@@ -149,4 +149,24 @@ Attempt2
 
 Resulted in a train loss of 8.40e-5, reg=0. Formula spitted out with H= .5000*q^2+.4998p^2+ 2e-6 with mean rel erro at .0047%
 
+##KAN on pendulum
 
+Config: width=2,5,5,1, grid=5 k=3, lamb=.01, lamb_entropy=10.0, LBFGS 100 step. 
+
+On my first attempt, the initial trainer was missing opt='lbfgs' and steps fell back to default. The preprune loss was 3.72e-3 and after prune 4 of 5 
+hidden 1 nodes survived. Auto_symbolic resulted in a nested cos composition trying to taylor approx .5p^2 through a cascade of cosines. Mean rel err was 
+then 12.1%
+
+I found that the trainer was using pykan defaults instead of the 100step lbfgs so the splines never had the fidelity for pruning to work.
+The original reg values where lamb = .001 and lam_entropy=2.0 were too weak for pendulum because the cos term loss dominates the p^2 term by 20x. 
+
+On the second attempt I added op='lbfgs' steps=steps to fit the call and I fixed .001 to .01 and lamb entropy from 2.0 to 10.0. Preprune loss
+was 4.52e-2 and post prune refit loss was 4.90e-3. Pruning collapsed to 2 hidden1 nodes. Auto_symbolic edge r^2 was all above .999
+
+Result
+H=.5001p^2 - 9.763cos(q)+9.764
+coeff errors on p^2 was .02%, on cos(q) was .48% and on const was .47%
+mean rel error was .0313% on phase space. 
+
+So the pendulum needed about 10x the regularization SHO did, because the term scales are imbalanced. When one term in the hamiltonian numberically dominates 
+by a factor of N, the entropy reg requires about log(N) more pressure to prevent the dominant term from taking extra capacity. 
