@@ -25,7 +25,7 @@ def load_pend_data():
     return q, p
 
 def main():
-    pend=SimplePendulum(m=1.0, k=1.0, g=9.81)
+    pend=SimplePendulum(m=1.0, l=1.0, g=9.81)
     hkan=HamiltonianKAN(pend) #dataset for refit after pruning
     q,p=load_pend_data()
     dataset=hkan.build_dataset(q,p)
@@ -55,9 +55,9 @@ def main():
     model.auto_symbolic(lib=lib)
     formula=model.symbolic_formula()[0][0]
     #1,0,0 picked x^2 with r2=.999 but it is actually linear pass through
-    model.fix_symbolic(1,0,0,'x')
-    model.fit(dataset, opt='LBFGS', steps=50)
-    formula=model.symbolic_formula()[0][0]
+   # model.fix_symbolic(1,0,0,'x')
+   # model.fit(dataset, opt='LBFGS', steps=50)
+   #formula=model.symbolic_formula()[0][0]
     print(f"discovered formula: H= {formula}")
 
     qg= np.linspace(-1.5, 1.5, 50)
@@ -69,7 +69,7 @@ def main():
         H_pred=model(test_in).squeeze().numpy()
     rel_error= np.abs(H_pred-H_true).mean() /np.abs(H_true).mean()
     print(f"mean rel error on phase space rid: {rel_error:.4%}")
-    print(f"true H=.5*q^2+ 9.81*(1-cos(q))")
+    print(f"true H=.5*p^2+ 9.81*(1-cos(q))")
 
     out2 = os.path.join(os.path.dirname(__file__), '..', 'results', 'tables', 'kan_pendulum_symbolic.txt')
     os.makedirs(os.path.dirname(out2), exist_ok=True)

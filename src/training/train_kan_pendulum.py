@@ -30,7 +30,7 @@ def load_sho_train_data():
 def train():
     q,p=load_sho_train_data()
     print(f"loaded {q.shape[0]} training trajectories w/length {q.shape[1]}")
-    pend= SimplePendulum(m=1.0, k=1.0, g=9.81)
+    pend= SimplePendulum(m=1.0, l=1.0, g=9.81)
     hkan=HamiltonianKAN(pend)
     dataset=hkan.build_dataset(q,p)
 
@@ -38,7 +38,7 @@ def train():
     print("sample shapes:", {k: getattr(v, 'shape', type(v)) for k, v in dataset.items()})
     print(f"built dataset w/{dataset['train_input'].shape[0]} train+ {dataset['test_input'].shape[0]} test points")
 
-    results=hkan.model.fit(dataset,lamb=lamb,lamb_entropy=lamb_entropy)
+    results=hkan.model.fit(dataset, opt='LBFGS', steps=steps, lamb=lamb, lamb_entropy=lamb_entropy)
 
     out_dir=os.path.join(os.path.dirname(__file__), '..', '..', 'results', 'checkpoints')
     os.makedirs(out_dir, exist_ok=True)
