@@ -55,6 +55,10 @@ def main():
     #gonna pick x^2 on p and q edges as sho contains x and x^2
     model.auto_symbolic(lib=lib)
     formula=model.symbolic_formula()[0][0]
+    #1,0,0 picked x^2 with r2=.999 but it is actually linear pass through
+    model.fix_symbolic(1,0,0,'x')
+    model.fit(dataset, opt='LBFGS', steps=50)
+    formula=model.symbolic_formula()[0][0]
     print(f"discovered formula: H= {formula}")
 
     qg= np.linspace(-2., 2., 50)

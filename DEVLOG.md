@@ -129,4 +129,24 @@ Improvement on leapfrog is marginal. Avg about 16 percent improvement and 2% on 
 
 SHO is closer to being an exacctly seperable ode so leapfrog's symplectic assumption fits H(theta) better, relatively. 
 
+##KAN SHO Training and Results
+
+KAN: width=2,5,5,1, grid=5, k=3, lamb=.001, lamb_entropy=2.0, LBFGS 100 steps. supervision-44.8k/11.2k tests points pointwise with cpu
+Training: first pass loss settled at around 4.63e-3 at around step 36. Post prune, train loss dropped to 5.95e-4
+
+Attempt 1
+- (0,0,0) x², r²=1.0000 
+- (0,1,0) x², r²=1.0000  
+- (1,0,0) x², r²=0.9994  #wrong 
+- (2,0,0) x,  r²=0.9769  
+
+Outputted a quartic looking formula with nonzero origin offset. The mean rel error was 9.7%. H(0,0) gave -.286 when it was 0.
+
+Observed that edge 1,0,0 picked x^2 with r^2 =.999 when in fact the truth was linear. Turned the representation wrong and quartic. So I overrode
+and did model.fix_symbolic(1,0,0,'x')  with 50 lbfgs refit steps
+
+Attempt2
+
+Resulted in a train loss of 8.40e-5, reg=0. Formula spitted out with H= .5000*q^2+.4998p^2+ 2e-6 with mean rel erro at .0047%
+
 
