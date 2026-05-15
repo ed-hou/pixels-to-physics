@@ -1,5 +1,5 @@
 model,energy_drift,traj_l2_error_50s
-parametric,88.519273%,1.104304e+00
+parametric,0.000000%,0.000000e+00
 kan,0.499003%,1.897168e-01
 ogNeuralODE,14.491379%,4.921143e-01
 HNNdopri5,0.936131%,1.766212e-01

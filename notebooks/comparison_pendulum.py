@@ -46,16 +46,19 @@ def oracle_of_truth_trajectory(q0,p0, t_eval):
     return q,p,H
 
 def parametric_rollout(q0,p0,t_eval):
+    pend = SimplePendulum(m=1.0, l=1.0, g=9.81)
     data=np.load(data_path)
+
     train_idx=data['train_idx']
     q_train=data['q_clean'][train_idx].flatten()
     p_train=data['p_clean'][train_idx].flatten()
-    H_train=.5*q_train**2+.5*p_train**2
+    H_train = pend.hamiltonian(q_train, p_train)
 
-    pfit=ParametricHamiltonianFit()
-    result=pfit.fit_pendulum(q_train,p_train,H_train)
-    a,b=result['a'],result['b']
-    print(f"parametric fit: a={a:.6f}, b= {b:.6f}")
+    pfit = ParametricHamiltonianFit()
+    result = pfit.fit_pendulum(q_train, p_train, H_train)
+    a, b = result['a'], result['b']
+    print(f"parametric fit: a={a:.6f}, b={b:.6f}")
+
 
     def deriv(t,state):
         q,p=state
