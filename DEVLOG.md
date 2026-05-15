@@ -170,3 +170,38 @@ mean rel error was .0313% on phase space.
 
 So the pendulum needed about 10x the regularization SHO did, because the term scales are imbalanced. When one term in the hamiltonian numberically dominates 
 by a factor of N, the entropy reg requires about log(N) more pressure to prevent the dominant term from taking extra capacity. 
+
+
+#day 11
+created both comparison_sho.py and comparison_pendulum.py. Each file first loads the actual eqn (ground truth) and then all four trained ml architectures rolls
+each from the same initial condition over 50s, computes energy drift and trajectory l2 error against ground truth, writes a csv and then produces a 
+H(t) figure.
+
+The results I received were as follows:
+
+### SHO 
+
+
+Parametric Model energy drift: 0%, trajl2=0
+Parametric KAN model energy drift .032013%,  trajL2 5.7e-2
+ogNeuralODE model energy drift 5.65%, 1.78e-02
+HNNdopri5 model energy drift .117%, trajL2 3.78e-03
+Hnnleapfrog energy drift .101%, trajL2 3.72e-03
+
+### Pendulum 
+
+Parametric Model energy drift: 0%, trajl2=0
+Parametric KAN model energy drift .499%,  trajL2 1.90e-01
+ogNeuralODE model energy drift 14.49%, trajL2 4.92e-01
+HNNdopri5 model energy drift .963%, trajL2 1.77e-01
+Hnnleapfrog energy drift .914%, trajL2 1.71e-01
+
+###Sig observations
+
+1) KAN's energy drift scales along with coeff slack. SHO discovered the coeff within .04% of theoretical and .03% drift. Pendulum discovered within .48% of theoretical. It has 12x larger coeff eerror with 16x larger drift.
+2) I found the pendulum to be the more revealing systgems because it differentiates the clear functions of the architectures. On the simple oscillator, ogneuralode is about 50-56 times worse than the parametric model. ON the pendulum it is about 16x worse than the parametric model. That means the gap actually shrinks on the pendulum. 
+3) KAN vs HNN comparison shows that energy accur4acy and traj accuracy are not the canonically the same thing. On the pendulum, KAN has lower energy drift than the HNN model, with about.50% vs .91%, so KAN preserves energy better. HNN, however, displayed better trajectory accuracy, with a lower L2 error, about .171 vs .190. KAN keeps the total energy more stasble, but it follows the actual path with slightly less perfromance. 
+
+KAN appears to learn hamiltonian that is almost there but not exactly. If the hamiltonian has the wrong coeff, then the system can conserve that wrong hamiltonian very well while in the wrong speed or period. HNN however, learns a hamiltonian that is not perfectly conserved, but its local predicitons keep the trajcetory closer over the tested time window. Would use kan if I wanted energy stability over tiem while hnn would be utilized if I wanted short or medium term path prediciton.
+I also found that the leapfrog integrator improved the HNN modestly compared with the default dopri5 with about 5% lower L2 error on the simple oscillator and about 3% lower l2 error on the pendulum. The symplectic structure helps hnn to preserve geometric regime over time. 
+
