@@ -59,7 +59,7 @@ def parametric_rollout(q0,p0,t_eval):
 
     def deriv(t,state):
         q,p=state
-        return [2*a*p, -2*p*q]
+        return [2*a*p, -2*b*q]
 
     soln=solve_ivp(deriv, (t_eval[0], t_eval[-1]), [q0, p0], t_eval=t_eval, method= 'DOP853', rtol=1e-12, atol=1e-12)
     return soln.y[0], soln.y[1]
